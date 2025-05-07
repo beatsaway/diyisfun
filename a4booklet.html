@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>A4 Booklet DIY</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      height: 100vh;
+      font-family: sans-serif;
+    }
+    .left, .right {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+    }
+    .left img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      transition: opacity 0.3s ease;
+    }
+    .credit {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+    .credit a {
+      color: #fff;
+      text-decoration: none;
+    }
+    .right iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="left" onclick="toggleImage()">
+    <img id="toggleImage" src="http://www.scrapnframes.com/SITE_EN/PAINTINGS/GALLERY/images/Mini-Books14P_img/MiniBook14P_Pagination.jpg" alt="Mini Book Image" />
+    <div class="credit">
+      Image credit: <a href="http://www.scrapnframes.com/" target="_blank">scrapnframes.com</a>
+    </div>
+  </div>
+  <div class="right">
+    <iframe 
+      src="https://www.youtube.com/embed/bkUxrDfgv8U?autoplay=1&mute=1&loop=1&start=6&playlist=bkUxrDfgv8U" 
+      allow="autoplay; encrypted-media" 
+      allowfullscreen>
+    </iframe>
+  </div>
+
+  <script>
+    const imageElement = document.getElementById('toggleImage');
+    const image1 = "http://www.scrapnframes.com/SITE_EN/PAINTINGS/GALLERY/images/Mini-Books14P_img/MiniBook14P_Pagination.jpg";
+    const image2 = "http://www.scrapnframes.com/SITE_EN/PAINTINGS/GALLERY/images/Mini-Books14P_img/MiniBook14P_Pliage.jpg";
+    let showingFirst = true;
+
+    function toggleImage() {
+      imageElement.src = showingFirst ? image2 : image1;
+      showingFirst = !showingFirst;
+    }
+
+    // Auto-toggle every 6 seconds
+    setInterval(toggleImage, 8000);
+  </script>
+</body>
+</html>
