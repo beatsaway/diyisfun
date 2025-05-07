@@ -1,55 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>DIY Projects Showcase</title>
+  <meta charset="UTF-8">
+  <title>Product Stories – Launch Page</title>
   <style>
     body {
-      margin: 0;
-      height: 100vh;
+      font-family: Arial, sans-serif;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      background: #f2f2f2;
-      font-family: sans-serif;
-    }
-    .container {
-      text-align: center;
-      padding: 2rem;
+      padding: 50px;
+      background: #f5f5f5;
     }
     h1 {
-      margin-bottom: 1rem;
-      font-size: 2rem;
-      color: #333;
+      margin-bottom: 30px;
     }
-    p {
-      margin-bottom: 2rem;
-      font-size: 1rem;
-      color: #666;
+    .link-container {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
     }
-    .enter-button {
-      font-size: 1.2rem;
-      padding: 0.75rem 1.5rem;
-      background-color: #000;
-      color: #fff;
-      border: none;
+    a {
+      padding: 15px 25px;
+      background: #007acc;
+      color: white;
+      text-decoration: none;
       border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
+      font-size: 18px;
+      text-align: center;
     }
-    .enter-button:hover {
-      background-color: #333;
+    a:hover {
+      background: #005ea0;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Welcome to Our DIY Projects</h1>
-    <p>This is just one of our interactive booklet explorations — more creative builds coming soon.</p>
-    <button class="enter-button" onclick="location.href='a4booklet.html'">
-      View A4 Booklet Project
-    </button>
+  <h1>Welcome to Product Stories</h1>
+  <div class="link-container">
+    <a href="a4booklet.html">View A4 Booklet</a>
+    <a href="a4print.html">Print Version (A4)</a>
+    <a href="/productstories/index.html">Visit Full Product Stories Site</a>
   </div>
 </body>
 </html>
