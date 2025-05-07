@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Printable A4 Canvas Grid</title>
+    <style>
+        body {
+            background: #f0f2f5;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .controls {
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+        .border-label {
+            font-size: 1.05rem;
+            color: #333;
+        }
+        .border-input {
+            width: 3.5rem;
+            font-size: 1.05rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            border: 1px solid #bbb;
+            margin-left: 0.5rem;
+        }
+        .print-btn {
+            padding: 0.7rem 1.5rem;
+            font-size: 1.1rem;
+            background: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(52,152,219,0.08);
+            transition: background 0.2s;
+        }
+        .print-btn:hover {
+            background: #217dbb;
+        }
+        .a4-canvas {
+            width: 210mm;
+            height: 297mm;
+            background: #fff;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.13);
+            margin: 2rem auto;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .a4-border {
+            display: none !important;
+        }
+        .a4-grid {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            margin: auto;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            background: #fff;
+            box-sizing: border-box;
+        }
+        .a4-cell {
+            border: none !important;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            position: relative;
+            background: none;
+            cursor: pointer;
+            transition: box-shadow 0.2s;
+            outline: 1.2px dashed #bbb;
+        }
+        .a4-cell.selected {
+            box-shadow: 0 0 0 2px #b3e0ff;
+            z-index: 2;
+        }
+        .a4-cell.dragover {
+            background: #eaf6ff;
+        }
+        .cell-img {
+            max-width: 98%;
+            max-height: 98%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            border-radius: 6px;
+            transition: transform 0.2s;
+            display: block;
+            margin: auto;
+        }
+        .cell-placeholder {
+            color: #bbb;
+            font-size: 0.95rem;
+            text-align: center;
+            pointer-events: none;
+            user-select: none;
+        }
+        .canvas-mm-overlay {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            background: rgba(255,255,255,0.85);
+            color: #333;
+            font-size: 1.1rem;
+            padding: 0.3em 0.8em;
+            border-radius: 6px;
+            z-index: 10;
+            pointer-events: none;
+            user-select: none;
+        }
+        .crop-controls {
+            display: flex;
+            gap: 1.2rem;
+            margin-bottom: 1.2rem;
+            align-items: center;
+        }
+        .crop-label {
+            font-size: 1.05rem;
+            color: #333;
+        }
+        .crop-input {
+            width: 3.5rem;
+            font-size: 1.05rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            border: 1px solid #bbb;
+            margin-left: 0.5rem;
+        }
+        @media print {
+            body {
+                background: #fff !important;
+            }
+            .controls, .print-btn, .canvas-mm-overlay, .crop-controls {
+                display: none !important;
+            }
+            .a4-canvas {
+                box-shadow: none !important;
+                margin: 0 !important;
+                width: 210mm !important;
+                height: 297mm !important;
+                page-break-after: avoid;
+            }
+            .a4-cell {
+                outline: none !important;
+                box-shadow: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <button class="print-btn" onclick="printA4Canvas()">Print this page as A4</button>
+    </div>
+    <div class="crop-controls">
+        <label class="crop-label">Top crop (mm):
+            <input type="number" min="0" max="297" step="1" value="0" class="crop-input" id="cropTop">
+        </label>
+        <label class="crop-label">Bottom crop (mm):
+            <input type="number" min="0" max="297" step="1" value="0" class="crop-input" id="cropBottom">
+        </label>
+        <label class="crop-label">Left crop (mm):
+            <input type="number" min="0" max="210" step="1" value="0" class="crop-input" id="cropLeft">
+        </label>
+        <label class="crop-label">Right crop (mm):
+            <input type="number" min="0" max="210" step="1" value="0" class="crop-input" id="cropRight">
+        </label>
+    </div>
+    <div class="a4-canvas" id="a4Canvas">
+        <div class="canvas-mm-overlay" id="canvasMmOverlay">210mm × 297mm</div>
+        <div class="a4-grid" id="a4Grid">
+            <!-- 16 cells -->
+            <div class="a4-cell" tabindex="0"><span class="cell-placeholder">Drop image here</span></div>
+            <div class="a4-cell" tabindex="0"><span class="cell-placeholder">Drop image here</span></div>
+            <div class="a4-cell" tabindex="0"><span class="cell-placeholder">Drop image here</span></div>
+            <div class="a4-cell" tabindex="0"><span class="cell-placeholder">Drop image here</span></div>
+            <div class="a4-cell" tabindex="0"><span class="cell-placeholder">Drop image here</span></div>
+            <div class="a4-cell" tabindex="0"><span class="cell-placeholder">Drop image here</span></div>
+            <div class="a4-cell" tabindex="0"><span class="cell-placeholder">Drop image here</span></div>
+            <div class="a4-cell" tabindex="0"><span class="cell-placeholder">Drop image here</span></div>
+            <div class="a4-cell" tabindex="0"><span class="cell-placeholder">Drop image here</span></div>
+            <div class="a4-cell" tabindex="0"><span class="cell-placeholder">Drop image here</span></div>
+            <div class="a4-cell" tabindex="0"><span class="cell-placeholder">Drop image here</span></div>
+            <div class="a4-cell" tabindex="0"><span class="cell-placeholder">Drop image here</span></div>
+            <div class="a4-cell" tabindex="0"><span class="cell-placeholder">Drop image here</span></div>
+            <div class="a4-cell" tabindex="0"><span class="cell-placeholder">Drop image here</span></div>
+            <div class="a4-cell" tabindex="0"><span class="cell-placeholder">Drop image here</span></div>
+            <div class="a4-cell" tabindex="0"><span class="cell-placeholder">Drop image here</span></div>
+        </div>
+    </div>
+    <script>
+    // Crop controls
+    const cropTop = document.getElementById('cropTop');
+    const cropBottom = document.getElementById('cropBottom');
+    const cropLeft = document.getElementById('cropLeft');
+    const cropRight = document.getElementById('cropRight');
+    const canvasMmOverlay = document.getElementById('canvasMmOverlay');
+    function updateCrop() {
+        // Calculate new grid size and position based on crop
+        const top = parseInt(cropTop.value) || 0;
+        const bottom = parseInt(cropBottom.value) || 0;
+        const left = parseInt(cropLeft.value) || 0;
+        const right = parseInt(cropRight.value) || 0;
+        // Clamp values
+        const maxW = 210, maxH = 297;
+        const w = Math.max(0, maxW - left - right);
+        const h = Math.max(0, maxH - top - bottom);
+        a4Grid.style.width = w + 'mm';
+        a4Grid.style.height = h + 'mm';
+        a4Grid.style.top = top + 'mm';
+        a4Grid.style.left = left + 'mm';
+        a4Grid.style.bottom = bottom + 'mm';
+        a4Grid.style.right = right + 'mm';
+        a4Grid.style.position = 'absolute';
+        // Update overlay
+        canvasMmOverlay.textContent = w + 'mm × ' + h + 'mm';
+    }
+    cropTop.addEventListener('input', updateCrop);
+    cropBottom.addEventListener('input', updateCrop);
+    cropLeft.addEventListener('input', updateCrop);
+    cropRight.addEventListener('input', updateCrop);
+    updateCrop();
+
+    // Drag and drop, selection, and rotation
+    const cells = Array.from(document.querySelectorAll('.a4-cell'));
+    let selectedCell = null;
+
+    function clearSelection() {
+        cells.forEach(cell => cell.classList.remove('selected'));
+        selectedCell = null;
+    }
+
+    cells.forEach(cell => {
+        // Drag and drop
+        cell.addEventListener('dragover', e => {
+            e.preventDefault();
+            cell.classList.add('dragover');
+        });
+        cell.addEventListener('dragleave', e => {
+            cell.classList.remove('dragover');
+        });
+        cell.addEventListener('drop', e => {
+            e.preventDefault();
+            cell.classList.remove('dragover');
+            clearSelection();
+            cell.classList.add('selected');
+            selectedCell = cell;
+            // Remove old image if any
+            const oldImg = cell.querySelector('.cell-img');
+            if (oldImg) oldImg.remove();
+            cell.querySelector('.cell-placeholder')?.remove();
+            // Read file
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const img = document.createElement('img');
+                img.className = 'cell-img';
+                img.style.transform = 'rotate(0deg)';
+                img.draggable = false;
+                img.onload = function() {
+                    // Snap to fit is handled by CSS
+                };
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    img.src = evt.target.result;
+                };
+                reader.readAsDataURL(file);
+                cell.appendChild(img);
+            }
+        });
+        // Selection
+        cell.addEventListener('click', e => {
+            if (selectedCell === cell) {
+                cell.classList.toggle('selected');
+                if (!cell.classList.contains('selected')) selectedCell = null;
+            } else {
+                clearSelection();
+                cell.classList.add('selected');
+                selectedCell = cell;
+            }
+        });
+        // Keyboard accessibility
+        cell.addEventListener('focus', e => {
+            clearSelection();
+            cell.classList.add('selected');
+            selectedCell = cell;
+        });
+    });
+
+    // Rotate image in selected cell
+    document.addEventListener('keydown', function(e) {
+        if (e.key.toLowerCase() === 'r' && selectedCell) {
+            const img = selectedCell.querySelector('.cell-img');
+            if (img) {
+                let current = img.getAttribute('data-rot') || '0';
+                let next = (parseInt(current, 10) + 90) % 360;
+                img.style.transform = `rotate(${next}deg)`;
+                img.setAttribute('data-rot', next);
+            }
+        }
+    });
+
+    function printA4Canvas() {
+        window.print();
+    }
+    </script>
+</body>
+</html>
