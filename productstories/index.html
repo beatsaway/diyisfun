@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10 Design Stories: How Products Change Over Time</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #3498db;
+            --light: #f8f9fa;
+            --text: #333333;
+            --shadow: rgba(0, 0, 0, 0.08);
+            --card-bg: #ffffff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Verdana, Arial, sans-serif;
+            font-size: 1.08rem;
+            font-weight: 400;
+            line-height: 1.7;
+            color: var(--text);
+            background-color: var(--light);
+            padding: 0;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 3rem 1rem;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        h2 {
+            color: var(--primary);
+            margin: 0 0 0 0.7rem;
+            font-weight: 700;
+            font-size: 1.13rem;
+            letter-spacing: -0.5px;
+            line-height: 1.18;
+            flex: 1;
+            text-align: left;
+        }
+        .subtitle {
+            font-size: 1.05rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+        .container { width: 100%; padding: 2rem 1rem; overflow: hidden; }
+        .story-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            padding: 1rem 2rem;
+            scroll-behavior: smooth;
+            position: relative;
+        }
+        .story-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: 100%;
+            max-width: 420px;
+            aspect-ratio: 1 / 1.41;
+            margin: 0 auto;
+            min-height: 0;
+            position: relative;
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        .story-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px var(--shadow);
+        }
+        .story-content {
+            padding: 0.7rem 1.5rem 1.5rem 1.5rem;
+            font-size: 0.97rem;
+            line-height: 1.25;
+        }
+        .story-title-row {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 0.9rem;
+            margin-bottom: 0.2rem;
+            padding-left: 0.2rem;
+        }
+        .story-image {
+            display: block;
+            float: none;
+            width: 72px;
+            height: 72px;
+            max-width: 72px;
+            max-height: 72px;
+            margin: 0;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 1px 4px rgba(44,62,80,0.07);
+        }
+        .story-text {
+            margin-bottom: 1.1rem;
+            font-size: 0.97rem;
+            line-height: 1.25;
+            overflow: hidden;
+            padding-left: 72px;
+            text-indent: 1.1em;
+            color: #2c3e50;
+        }
+        .question {
+            font-weight: 500;
+            font-style: italic;
+            margin: 0.7rem 0 0.5rem 0;
+            color: var(--secondary);
+            font-size: 0.93rem;
+            border-top: 1px solid #e0e6ed;
+            padding-top: 0.5rem;
+        }
+        .reflection {
+            font-size: 0.91rem;
+            border-left: 3px solid var(--accent);
+            padding-left: 0.7rem;
+            margin: 0.7rem 0 0.5rem 0;
+            line-height: 1.22;
+            background: #fafdff;
+        }
+        .key-phrase {
+            display: inline-block;
+            background-color: var(--accent);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+        }
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            z-index: 100;
+        }
+        .nav-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .nav-button:hover {
+            background-color: var(--secondary);
+            transform: scale(1.1);
+        }
+        .indicators {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            z-index: 100;
+        }
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--shadow);
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .indicator.active {
+            background-color: var(--accent);
+            transform: scale(1.3);
+        }
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            background-color: var(--primary);
+            color: white;
+        }
+        .scroll-hint {
+            text-align: center;
+            color: var(--secondary);
+            margin: 1rem 0;
+            animation: pulse 2s infinite;
+            opacity: 0.8;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+        @media (max-width: 768px) {
+            h1 { font-size: 1.3rem; }
+            .subtitle { font-size: 0.95rem; }
+            .container { padding: 1rem 0.5rem; }
+            .story-card {
+                max-width: 90vw;
+                aspect-ratio: 1 / 1.41;
+                min-width: 0;
+                width: 100%;
+            }
+            .story-container { padding: 1rem; gap: 1.2rem; }
+        }
+        @media (max-width: 600px) {
+            .story-title-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.3rem;
+                padding-left: 0;
+            }
+            .story-image {
+                width: 60px;
+                height: 60px;
+                max-width: 60px;
+                max-height: 60px;
+            }
+            .story-text {
+                padding-left: 0;
+                text-indent: 0.9em;
+            }
+        }
+        .small-page-number {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.95rem;
+            color: #888;
+            background: rgba(255,255,255,0.7);
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-weight: 500;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .afterthought {
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+            padding: 0.5rem 1rem 0.5rem 1.2rem;
+            background: #f3faff;
+            border-left: 4px solid #b3e0ff;
+            border-radius: 0 12px 12px 0;
+            font-size: 0.91rem;
+            color: #205080;
+            font-style: italic;
+            box-shadow: 0 1px 4px rgba(52,152,219,0.06);
+            line-height: 1.22;
+            position: relative;
+        }
+        .afterthought:before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 16px;
+            width: 0;
+            height: 0;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+            border-right: 10px solid #b3e0ff;
+        }
+    </style>
+</head>
+<body>
+    <div style="margin: 1.2rem 0 0.5rem 2vw;">
+        <label style="font-size:1.05rem;cursor:pointer;">
+            <input type="checkbox" id="togglePageNumbers" checked style="margin-right:0.5em;"> Show page numbers
+        </label>
+    </div>
+    <button id="downloadJpgBtn" style="margin: 1.2rem auto 0.5rem 2vw; padding: 0.7rem 1.3rem; font-size: 1.05rem; background: #3498db; color: #fff; border: none; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 8px rgba(52,152,219,0.08);">Download All Stories as JPG</button>
+    <header>
+        <h1>10 Design Stories: How Products Change Over Time</h1>
+        <p class="subtitle">See how simple ideas become amazing products through small changes</p>
+    </header>
+    <p class="scroll-hint">Scroll down to read all the stories</p>
+    <div class="container">
+        <div class="story-container" id="storyContainer">
+            <!-- Story 1: Spanx Shapewear (User Needs/Empathy) -->
+            <div class="story-card" id="story1">
+                <div class="story-content">
+                    <div class="story-title-row">
+                        <img src="img/spanx-shapewear.png" alt="Spanx Shapewear" class="story-image" loading="lazy">
+                        <h2>Spanx Shapewear</h2>
+                    </div>
+                    <div class="story-text">
+                        <p>Sara Blakely wanted better underwear, so she cut the feet off her tights. She kept testing new materials and shapes until it was comfortable. She listened to real people and made Spanx better for everyone. Now, Spanx is a big brand because she kept improving her idea.</p>
+                    </div>
+                    <p class="question">Why do people who have a problem often make the best solutions?</p>
+                    <div class="reflection">
+                        <span class="key-phrase">Empathy in design</span>
+                        <p>Great products start with understanding real people's needs. When designers listen and care about users, they make things that truly help. Empathy is the first step in good design.</p>
+                    </div>
+                    <div class="afterthought">If you could redesign any piece of clothing to make it more comfortable, what would you change?</div>
+                    <div class="small-page-number">1</div>
+                </div>
+            </div>
+            <!-- Story 2: IKEA BILLY Bookcase (Iterative Design) -->
+            <div class="story-card" id="story2">
+                <div class="story-content">
+                    <div class="story-title-row">
+                        <img src="img/ikea-billy-bookcase.png" alt="IKEA BILLY Bookcase" class="story-image" loading="lazy">
+                        <h2>IKEA BILLY Bookcase</h2>
+                    </div>
+                    <div class="story-text">
+                        <p>The BILLY bookcase first came out in 1979. At first, it was not very strong and you couldn't move the shelves or change how it looked. IKEA listened to what people said and made it better. They made it easier to build, added shelves you can move, and made it in different sizes. Now, the BILLY is stronger and uses better materials. IKEA even uses recycled wood to help the planet.</p>
+                    </div>
+                    <p class="question">What can we learn from simple products like the BILLY bookcase?</p>
+                    <div class="reflection">
+                        <span class="key-phrase">Cycle by cycle</span>
+                        <p>Design is about making things better, cycle by cycle. By listening to feedback and making changes each time, products can last longer and become more useful. This is called the design cycle, and it's a key part of the design process.</p>
+                    </div>
+                    <div class="afterthought">What would your dream bookcase look like? Would it have secret compartments, lights, or something else?</div>
+                    <div class="small-page-number">2</div>
+                </div>
+            </div>
+            <!-- Story 3: Dyson Vacuum Cleaner (Learning from Failure) -->
+            <div class="story-card" id="story3">
+                <div class="story-content">
+                    <div class="story-title-row">
+                        <img src="img/dyson-vacuum-cleaner.png" alt="Dyson Vacuum Cleaner" class="story-image" loading="lazy">
+                        <h2>Dyson Vacuum Cleaner</h2>
+                    </div>
+                    <div class="story-text">
+                        <p>James Dyson made over 5,000 models before his vacuum cleaner worked well. The old vacuums lost power when they filled with dust. Dyson kept changing the design until it worked better. Even after his first success, he kept making it quieter, smaller, and easier to use. Now, Dyson vacuums are famous for being powerful and clever.</p>
+                    </div>
+                    <p class="question">Why is it good to keep trying, even if you fail?</p>
+                    <div class="reflection">
+                        <span class="key-phrase">Learning from failure</span>
+                        <p>Every time something fails, you learn something new. Designers test, improve, and try again. Failure is not the end—it's a way to find better solutions. This is important in all design and technology work.</p>
+                    </div>
+                    <div class="afterthought">Can you think of something at home that could work better if you changed just one thing about it?</div>
+                    <div class="small-page-number">3</div>
+                </div>
+            </div>
+            <!-- Story 4: Nike Air Technology (Innovation & Problem-Solving) -->
+            <div class="story-card" id="story4">
+                <div class="story-content">
+                    <div class="story-title-row">
+                        <img src="img/nike-air-technology.png" alt="Nike Air Technology" class="story-image" loading="lazy">
+                        <h2>Nike Air Technology</h2>
+                    </div>
+                    <div class="story-text">
+                        <p>Nike Air shoes started with a wild idea: put air bubbles in the soles! At first, the bubbles popped and the shoes were hard to make. But Nike kept trying. They made the bubbles stronger and easier to see. Over the years, they made the shoes more comfortable and better for running, using ideas from other fields like space science.</p>
+                    </div>
+                    <p class="question">How can ideas from other areas help us make new things?</p>
+                    <div class="reflection">
+                        <span class="key-phrase">Creative innovation</span>
+                        <p>Innovation often means using ideas from different places. Designers solve problems by thinking creatively and borrowing ideas from other fields. This helps make products better and more exciting.</p>
+                    </div>
+                    <div class="afterthought">If you could add "air" or another cool material to any product, what would you choose and why?</div>
+                    <div class="small-page-number">4</div>
+                </div>
+            </div>
+            <!-- Story 5: LEGO Sustainability Journey (Materials & Sustainability) -->
+            <div class="story-card" id="story5">
+                <div class="story-content">
+                    <div class="story-title-row">
+                        <img src="img/lego-sustainability-journey.png" alt="LEGO Sustainability Journey" class="story-image" loading="lazy">
+                        <h2>LEGO's Sustainability Journey</h2>
+                    </div>
+                    <div class="story-text">
+                        <p>LEGO bricks have looked the same for a long time, but they are made from plastic. LEGO wanted to use better materials that are kinder to the planet. They tried over 250 new materials! At first, the new bricks were not perfect, but LEGO kept testing and improving. Now, some LEGO pieces are made from plants, and they are still strong and fun to use.</p>
+                    </div>
+                    <p class="question">Is it okay if new materials are not perfect at first?</p>
+                    <div class="reflection">
+                        <span class="key-phrase">Sustainable choices</span>
+                        <p>Choosing the right materials is important for the environment. Designers must balance quality, safety, and sustainability. Trying new materials helps us protect the planet and make better products for the future.</p>
+                    </div>
+                    <div class="afterthought">What everyday object do you wish was made from eco-friendly materials?</div>
+                    <div class="small-page-number">5</div>
+                </div>
+            </div>
+            <!-- Story 6: Slime (Making & Experimentation) -->
+            <div class="story-card" id="story6">
+                <div class="story-content">
+                    <div class="story-title-row">
+                        <img src="img/slime.png" alt="Slime" class="story-image" loading="lazy">
+                        <h2>Slime</h2>
+                    </div>
+                    <div class="story-text">
+                        <p>Slime became a huge trend in schools and online. People loved making their own slime at home using glue, borax, and food colouring. There are so many types—glitter slime, fluffy slime, and even glow-in-the-dark slime! Making and playing with slime is fun, relaxing, and lets you be creative with colours and textures.</p>
+                    </div>
+                    <p class="question">Why do people enjoy making and playing with slime?</p>
+                    <div class="reflection">
+                        <span class="key-phrase">Experiment and make</span>
+                        <p>Making things by hand helps you learn about materials and processes. Experimenting with slime teaches about mixing, safety, and creativity. Making is a big part of design and technology.</p>
+                    </div>
+                    <div class="afterthought">If you could invent a new type of slime, what would it look or feel like?</div>
+                    <div class="small-page-number">6</div>
+                </div>
+            </div>
+            <!-- Story 7: OXO Good Grips Peeler (Health, Safety & Ergonomics) -->
+            <div class="story-card" id="story7">
+                <div class="story-content">
+                    <div class="story-title-row">
+                        <img src="img/oxo-good-grips-peeler.png" alt="OXO Good Grips Peeler" class="story-image" loading="lazy">
+                        <h2>OXO Good Grips Peeler</h2>
+                    </div>
+                    <div class="story-text">
+                        <p>Sam Farber saw his wife struggle to use a normal peeler because of her sore hands. He made lots of new handles to find one that was easy to hold. The final peeler was soft and comfy for everyone. OXO kept testing with all kinds of people to make sure their tools were easy for everyone to use.</p>
+                    </div>
+                    <p class="question">How does making things easier for some people help everyone?</p>
+                    <div class="reflection">
+                        <span class="key-phrase">Design for all</span>
+                        <p>Good design means thinking about health, safety, and comfort. When products are easy and safe for everyone, they work better for all users. Ergonomics is about making things fit people, not the other way around.</p>
+                    </div>
+                    <div class="afterthought">What kitchen tool or gadget do you find tricky to use, and how would you make it easier?</div>
+                    <div class="small-page-number">7</div>
+                </div>
+            </div>
+            <!-- Story 8: Bird Electric Scooters (Technology in Society) -->
+            <div class="story-card" id="story8">
+                <div class="story-content">
+                    <div class="story-title-row">
+                        <img src="img/bird-electric-scooters.png" alt="Bird Electric Scooters" class="story-image" loading="lazy">
+                        <h2>Bird Electric Scooters</h2>
+                    </div>
+                    <div class="story-text">
+                        <p>Bird launched its first electric scooters in 2017 in California. At first, only a few cities had them, and the scooters were slow and needed charging often. Bird improved the scooters to go faster and last longer. Now, you can find Bird scooters in many cities around the world, and people use an app to rent them for quick trips. They are especially popular with people who want to get around easily.</p>
+                    </div>
+                    <p class="question">How did Bird scooters change city travel?</p>
+                    <div class="reflection">
+                        <span class="key-phrase">Tech in daily life</span>
+                        <p>Technology changes how we live and move. Electric scooters show how new inventions can make cities cleaner and travel easier. Designers must think about how products fit into society.</p>
+                    </div>
+                    <div class="afterthought">If you could design a new way to get around your town or school, what would it be?</div>
+                    <div class="small-page-number">8</div>
+                </div>
+            </div>
+            <!-- Story 9: Hydro Flask (Branding & Aesthetics) -->
+            <div class="story-card" id="story9">
+                <div class="story-content">
+                    <div class="story-title-row">
+                        <img src="img/hydro-flask.png" alt="Hydro Flask" class="story-image" loading="lazy">
+                        <h2>Hydro Flask</h2>
+                    </div>
+                    <div class="story-text">
+                        <p>Hydro Flask started in 2009 as a water bottle that kept drinks cold for hours. At first, it was just for hikers and athletes. But soon, students and lots of people loved it because it was colourful and kept water cold all day. People began decorating their Hydro Flasks with stickers to show their style. Now, Hydro Flask is a must-have for many students.</p>
+                    </div>
+                    <p class="question">How did Hydro Flask become so popular?</p>
+                    <div class="reflection">
+                        <span class="key-phrase">Brand and style</span>
+                        <p>Branding and looks matter. When products are useful and look good, people want to use them. Personalising products helps people express themselves and makes design more fun.</p>
+                    </div>
+                    <div class="afterthought">How would you decorate your own water bottle to show your personality?</div>
+                    <div class="small-page-number">9</div>
+                </div>
+            </div>
+            <!-- Story 10: Nintendo Switch (Functionality & Adaptability) -->
+            <div class="story-card" id="story10">
+                <div class="story-content">
+                    <div class="story-title-row">
+                        <img src="img/nintendo-switch.png" alt="Nintendo Switch" class="story-image" loading="lazy">
+                        <h2>Nintendo Switch</h2>
+                    </div>
+                    <div class="story-text">
+                        <p>The Nintendo Switch is a games console you can use at home or take with you. Before, you needed a TV for big games and a different device for travel. The Switch lets you do both. Nintendo keeps adding new games and features, so it stays exciting for everyone.</p>
+                    </div>
+                    <p class="question">Why is it good when products can do more than one thing?</p>
+                    <div class="reflection">
+                        <span class="key-phrase">Adapt and improve</span>
+                        <p>Designers make products that fit different needs and situations. Adaptable products are more useful and last longer. Thinking about how people use things helps make better designs.</p>
+                    </div>
+                    <div class="afterthought">If you could invent a gadget that works in two different ways, what would it do?</div>
+                    <div class="small-page-number">10</div>
+                </div>
+            </div>
+            <!-- Story 11: Apple AirPods (Problem-Solving & Miniaturisation) -->
+            <div class="story-card" id="story11">
+                <div class="story-content">
+                    <div class="story-title-row">
+                        <img src="img/apple-airpods.png" alt="Apple AirPods" class="story-image" loading="lazy">
+                        <h2>Apple AirPods</h2>
+                    </div>
+                    <div class="story-text">
+                        <p>Apple's AirPods went through many changes before they were sold. At first, they had problems with battery life and connecting to phones. The shape was tested to fit well in your ear and hold the battery. Apple kept fixing problems, and now AirPods are very popular. They keep making them better with new features.</p>
+                    </div>
+                    <p class="question">How do limits help us make better small products?</p>
+                    <div class="reflection">
+                        <span class="key-phrase">Solving with limits</span>
+                        <p>Designers often have to work with small spaces or tough rules. Solving these problems leads to clever ideas and new technology. Miniaturisation is a big part of modern design.</p>
+                    </div>
+                    <div class="afterthought">What's the smallest gadget you use, and how could it be improved?</div>
+                    <div class="small-page-number">11</div>
+                </div>
+            </div>
+            <!-- Story 12: Tesla's Autopilot (Digital/Physical Integration & Continuous Improvement) -->
+            <div class="story-card" id="story12">
+                <div class="story-content">
+                    <div class="story-title-row">
+                        <img src="img/tesla-autopilot.png" alt="Tesla Autopilot" class="story-image" loading="lazy">
+                        <h2>Tesla's Autopilot</h2>
+                    </div>
+                    <div class="story-text">
+                        <p>Tesla cars can drive themselves using Autopilot. At first, the system could only do simple things. Tesla used information from real drivers to make it better. They sent updates to the cars to fix problems and add new features. This way, the cars keep getting better even after you buy them.</p>
+                    </div>
+                    <p class="question">How does updating products after selling them change things?</p>
+                    <div class="reflection">
+                        <span class="key-phrase">Always improving</span>
+                        <p>Modern products can change and get better even after you buy them. Digital updates mean designers can fix problems and add features. This is a new way of thinking about products and technology.</p>
+                    </div>
+                    <div class="afterthought">If you could add one "smart" feature to your bike, scooter, or backpack, what would it be?</div>
+                    <div class="small-page-number">12</div>
+                </div>
+            </div>
+            <!-- Story 13: Fidget Spinner (Trends, Health & Wellbeing) -->
+            <div class="story-card" id="story13">
+                <div class="story-content">
+                    <div class="story-title-row">
+                        <img src="img/fidget-spinner.png" alt="Fidget Spinner" class="story-image" loading="lazy">
+                        <h2>Fidget Spinner</h2>
+                    </div>
+                    <div class="story-text">
+                        <p>Fidget spinners became super popular almost overnight. They are small toys you spin between your fingers. People liked them because they are easy to use, come in lots of colours, and can help you focus or relax. Some people even learned tricks and collected different designs.</p>
+                    </div>
+                    <p class="question">What made fidget spinners such a big craze?</p>
+                    <div class="reflection">
+                        <span class="key-phrase">Wellbeing and trends</span>
+                        <p>Some products become popular because they help people feel calm or fit in with friends. Health, wellbeing, and trends all play a part in why we choose certain products.</p>
+                    </div>
+                    <div class="afterthought">What's your favourite way to relax or focus when you're feeling fidgety?</div>
+                    <div class="small-page-number">13</div>
+                </div>
+            </div>
+            <!-- Story 14: Rubik's Cube (Evaluation & Problem-Solving) -->
+            <div class="story-card" id="story14">
+                <div class="story-content">
+                    <div class="story-title-row">
+                        <img src="img/rubiks-cube.png" alt="Rubik's Cube" class="story-image" loading="lazy">
+                        <h2>Rubik's Cube</h2>
+                    </div>
+                    <div class="story-text">
+                        <p>The Rubik's Cube is a colourful puzzle that has been around since the 1970s. It became popular again because people love solving it and sharing their fastest times online. There are competitions, tutorials, and even new versions with more sides and colours.</p>
+                    </div>
+                    <p class="question">What makes solving puzzles like the Rubik's Cube so satisfying?</p>
+                    <div class="reflection">
+                        <span class="key-phrase">Evaluate and solve</span>
+                        <p>Solving puzzles is about testing ideas, checking your work, and improving your skills. Evaluation is a key part of design and technology—always look for ways to get better.</p>
+                    </div>
+                    <div class="afterthought">Can you think of a puzzle or challenge you'd like to invent for your friends?</div>
+                    <div class="small-page-number">14</div>
+                </div>
+            </div>
+            <!-- Story 15: Herman Miller Aeron Chair (Aesthetics, Ergonomics & Acceptance) -->
+            <div class="story-card" id="story15">
+                <div class="story-content">
+                    <div class="story-title-row">
+                        <img src="img/herman-miller-aeron-chair.png" alt="Herman Miller Aeron Chair" class="story-image" loading="lazy">
+                        <h2>Herman Miller Aeron Chair</h2>
+                    </div>
+                    <div class="story-text">
+                        <p>The Aeron chair looked very different from other office chairs. People were not sure about it at first. But the new design was more comfortable and better for your back. The team kept testing and changing the chair to make it even better. Now, it is famous for being comfy and looking cool.</p>
+                    </div>
+                    <p class="question">How can a strange-looking design become popular?</p>
+                    <div class="reflection">
+                        <span class="key-phrase">Aesthetics and comfort</span>
+                        <p>Sometimes, new designs look unusual at first. But if they work well and feel good, people accept and even love them. Aesthetics and ergonomics are both important in design.</p>
+                    </div>
+                    <div class="afterthought">If you could design your perfect chair for school or home, what special features would it have?</div>
+                    <div class="small-page-number">15</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>© 2025 Design Stories for KS3 | Made for students in the UK</p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const indicators = document.getElementById('indicators');
+            const cards = document.querySelectorAll('.story-card');
+            let currentIndex = 0;
+            // Create indicators
+            cards.forEach((_, index) => {
+                const indicator = document.createElement('div');
+                indicator.classList.add('indicator');
+                if (index === 0) indicator.classList.add('active');
+                indicator.addEventListener('click', () => {
+                    scrollToCard(index);
+                });
+                indicators.appendChild(indicator);
+            });
+            const indicatorDots = document.querySelectorAll('.indicator');
+            // Scroll to specific card
+            function scrollToCard(index) {
+                if (index < 0) index = 0;
+                if (index >= cards.length) index = cards.length - 1;
+                window.scrollTo({
+                    top: cards[index].offsetTop - 120,
+                    behavior: 'smooth'
+                });
+                currentIndex = index;
+                updateIndicators();
+            }
+            // Update active indicator
+            function updateIndicators() {
+                indicatorDots.forEach((dot, index) => {
+                    if (index === currentIndex) {
+                        dot.classList.add('active');
+                    } else {
+                        dot.classList.remove('active');
+                    }
+                });
+            }
+            // Navigation buttons
+            prevBtn.addEventListener('click', () => {
+                scrollToCard(currentIndex - 1);
+            });
+            nextBtn.addEventListener('click', () => {
+                scrollToCard(currentIndex + 1);
+            });
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowUp') {
+                    scrollToCard(currentIndex - 1);
+                } else if (e.key === 'ArrowDown') {
+                    scrollToCard(currentIndex + 1);
+                }
+            });
+            // Update indicator on scroll
+            window.addEventListener('scroll', () => {
+                const scrollPosition = window.scrollY + 200;
+                let closest = 0;
+                let closestDistance = Infinity;
+                cards.forEach((card, index) => {
+                    const distance = Math.abs(card.offsetTop - scrollPosition);
+                    if (distance < closestDistance) {
+                        closestDistance = distance;
+                        closest = index;
+                    }
+                });
+                if (currentIndex !== closest) {
+                    currentIndex = closest;
+                    updateIndicators();
+                    updateNavButtons();
+                }
+            });
+            // Show/hide navigation buttons based on position
+            function updateNavButtons() {
+                prevBtn.disabled = currentIndex === 0;
+                nextBtn.disabled = currentIndex === cards.length - 1;
+                prevBtn.style.opacity = currentIndex === 0 ? '0.5' : '1';
+                nextBtn.style.opacity = currentIndex === cards.length - 1 ? '0.5' : '1';
+            }
+            // Initialize
+            updateNavButtons();
+        });
+        document.getElementById('downloadJpgBtn').addEventListener('click', async function() {
+            const cards = document.querySelectorAll('.story-card');
+            const zip = new JSZip();
+            for (let i = 0; i < cards.length; i++) {
+                const card = cards[i];
+                card.style.background = '#fff';
+                // Render card to canvas
+                const canvas = await html2canvas(card, {backgroundColor: '#fff', scale: 2});
+                // Convert canvas to blob
+                await new Promise(resolve => {
+                    canvas.toBlob(blob => {
+                        zip.file(`story-${i+1}.jpg`, blob);
+                        resolve();
+                    }, 'image/jpeg', 0.95);
+                });
+                card.style.background = '';
+            }
+            // Generate and download zip
+            zip.generateAsync({type: 'blob'}).then(function(content) {
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(content);
+                link.download = 'stories.zip';
+                link.click();
+            });
+        });
+        // Page number toggle
+        document.getElementById('togglePageNumbers').addEventListener('change', function(e) {
+            const show = e.target.checked;
+            document.querySelectorAll('.small-page-number').forEach(el => {
+                el.style.display = show ? '' : 'none';
+            });
+        });
+        // Optionally, ensure page numbers are visible on load
+        document.querySelectorAll('.small-page-number').forEach(el => {
+            el.style.display = '';
+        });
+    </script>
+</body>
+</html> 
